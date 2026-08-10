@@ -8,11 +8,15 @@ MONGO_URI = os.getenv("MONGO_URI")
 DATABASE_NAME = os.getenv("DATABASE_NAME")
 COLLECTION_NAME = os.getenv("COLLECTION_NAME")
 
-client = MongoClient(MONGO_URI)
+client = MongoClient(
+    MONGO_URI,
+    serverSelectionTimeoutMS=5000,
+    connectTimeoutMS=5000,
+    socketTimeoutMS=10000,
+)
 
 db = client[DATABASE_NAME]
 coleccion = db[COLLECTION_NAME]
-
 
 def verificar_mongodb():
     try:

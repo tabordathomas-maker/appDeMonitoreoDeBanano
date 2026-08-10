@@ -8,108 +8,79 @@ import {
     Tooltip,
     Brush,
 } from "recharts";
-
+import { MoreVertical } from "lucide-react";
 
 function formatDateTime(value) {
     if (!value) return "";
 
-    const date = new Date(value);
-
-    return date.toLocaleString("es-CO", {
+    return new Date(value).toLocaleString("es-CO", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        second: "2-digit",
+        hour12: false,
     });
 }
-
 
 function formatAxisDate(value) {
     if (!value) return "";
 
-    const date = new Date(value);
-
-    return date.toLocaleString("es-CO", {
-        day: "2-digit",
-        month: "2-digit",
+    return new Date(value).toLocaleString("es-CO", {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true,
+        hour12: false,
     });
 }
 
-
-function SensorChart({
-    title,
-    data,
-    dataKey,
-    unit,
-    color,
-}) {
+function SensorChart({ title, data, dataKey, unit, color }) {
     return (
-        <div className="chart-card">
-
+        <article className="chart-card">
             <div className="chart-header">
-                <div>
-                    <h3>{title}</h3>
-
-                    <span>
-                        Evolución en el tiempo
-                    </span>
-                </div>
+                <h3 style={{ color }}>{title}</h3>
+                <button type="button" className="chart-menu" title="Opciones">
+                    <MoreVertical size={19} />
+                </button>
             </div>
 
             <div className="chart-container">
-
-                <ResponsiveContainer
-                    width="100%"
-                    height="100%"
-                >
-
+                <ResponsiveContainer width="100%" height="100%">
                     <LineChart
                         data={data}
-                        margin={{
-                            top: 10,
-                            right: 20,
-                            left: 0,
-                            bottom: 20,
-                        }}
+                        margin={{ top: 12, right: 8, left: -12, bottom: 8 }}
                     >
-
                         <CartesianGrid
-                            strokeDasharray="3 3"
+                            stroke="#edf0ed"
+                            strokeDasharray="2 4"
                             vertical={false}
                         />
 
                         <XAxis
                             dataKey="fecha"
                             tickFormatter={formatAxisDate}
-                            tick={{
-                                fontSize: 11,
-                            }}
-                            minTickGap={40}
+                            tick={{ fontSize: 10, fill: "#626b66" }}
+                            axisLine={{ stroke: "#dfe4df" }}
+                            tickLine={false}
+                            minTickGap={22}
                         />
 
                         <YAxis
-                            tick={{
-                                fontSize: 11,
-                            }}
+                            tick={{ fontSize: 10, fill: "#626b66" }}
+                            axisLine={false}
+                            tickLine={false}
+                            width={32}
                         />
 
                         <Tooltip
-                            labelFormatter={(value) =>
-                                formatDateTime(value)
-                            }
+                            labelFormatter={formatDateTime}
                             contentStyle={{
                                 borderRadius: "10px",
                                 border: "1px solid #e5e7eb",
-                                boxShadow:
-                                    "0 5px 20px rgba(0,0,0,0.08)",
+                                boxShadow: "0 8px 24px rgba(0,0,0,0.10)",
                             }}
                             formatter={(value) => [
-                                `${value} ${unit}`,
+                                `${Number(value).toFixed(1)} ${unit}`,
                                 title,
                             ]}
                         />
@@ -118,31 +89,36 @@ function SensorChart({
                             type="monotone"
                             dataKey={dataKey}
                             stroke={color}
-                            strokeWidth={3}
+                            strokeWidth={2.5}
                             dot={{
-                                r: 3,
-                                strokeWidth: 2,
+                                r: 3.2,
+                                fill: color,
+                                stroke: "#fff",
+                                strokeWidth: 1.5,
                             }}
                             activeDot={{
-                                r: 7,
+                                r: 6,
+                                fill: color,
+                                stroke: "#fff",
+                                strokeWidth: 2,
                             }}
+                            isAnimationActive
+                            animationDuration={450}
                         />
 
-                        <Brush
-                            dataKey="fecha"
-                            height={25}
-                            stroke={color}
-                            travellerWidth={10}
-                            tickFormatter={formatAxisDate}
-                        />
-
+                        {data.length > 5 && (
+                            <Brush
+                                dataKey="fecha"
+                                height={18}
+                                stroke={color}
+                                travellerWidth={8}
+                                tickFormatter={formatAxisDate}
+                            />
+                        )}
                     </LineChart>
-
                 </ResponsiveContainer>
-
             </div>
-
-        </div>
+        </article>
     );
 }
 

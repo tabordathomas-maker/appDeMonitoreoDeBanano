@@ -1,16 +1,26 @@
-function MetricCard({ icon, title, value, unit }) {
+function MetricCard({ icon, iconClass, title, value, unit, status }) {
     return (
-        <div className="metric-card">
-            <div className="metric-card-header">
-                <span className="metric-icon">{icon}</span>
-                <span className="metric-title">{title}</span>
+        <article className="metric-card">
+            <div className={`metric-icon ${iconClass}`}>
+                {icon}
             </div>
 
-            <div className="metric-value">
-                {value}
-                <span className="metric-unit">{unit}</span>
+            <div className="metric-content">
+                <h2>{title}</h2>
+
+                <div className="metric-value">
+                    {value}
+                    <span>{unit}</span>
+                </div>
+
+                {status && (
+                    <div className="metric-status">
+                        <span className="status-dot" />
+                        {status}
+                    </div>
+                )}
             </div>
-        </div>
+        </article>
     );
 }
 
